@@ -1,13 +1,14 @@
-# TODO Team Name: Early-Onset Preeclampsia vs Preterm Birth, Adjusted for Fetal Sex and Maternal Age
-
-OpenBio 2026 Datathon, Track 1: Maternal-Fetal Cell Communication in Preeclampsia
+# Team Name: Volcano Squad
 
 ## Team
 
 | Name | Role |
 |---|---|
-| TODO name | TODO role |
-| TODO name | TODO role |
+| David Drew | Researcher |
+| Alexis Namulinda | Researcher |
+| Annabelle McGregor | Researcher |
+| Zhalgas Zhiyenbekov | Data Scientist |
+
 
 ## Research Question
 
@@ -15,12 +16,10 @@ In bulk RNA-seq from decidual tissue (GSE203507), which genes differ between ear
 
 ## Data Used
 
-- [x] GSE203507 bulk RNA-seq (required)
-- [ ] Zeisel/Admati gene browser, for at least three genes (required)
-- [ ] Admati/Skarbianskis single-cell pseudobulk files (optional)
-- [ ] Other public data: none
-
-The notebook analyses the decidua version of the data (`data/extension/decidua`: `track01_counts_db.csv`, `track01_metadata_db.csv`, `qc/track01_htseq_summary.csv`), which has 27 samples and 26,485 genes. The EOPE and iPTB samples used in the comparison are the same as in the full dataset. The original placental tissue files (`_vt`) can be used instead by switching the commented lines in the setup and load cells.
+- [x] GSE203507 bulk RNA-seq (required): decidual tissue samples (`_DB` files), 27 samples and 26,485 genes, from the Track 1 data package (`data/extension/decidua`). Citation [1].
+- [ ] Zeisel/Admati gene browser, for at least three genes (required): TODO add the three genes and what the browser showed, then cite [2].
+- [ ] Admati/Skarbianskis single-cell pseudobulk files (optional): not used.
+- [x] Other public data: none besides the Track 1 data package from the organizers. Citation [3].
 
 ## How to Run
 
@@ -33,8 +32,9 @@ Reproducibility details:
 - Notebook or script files: `notebooks/track01_4_f_covariates_median_eda_db.ipynb`
 - Where we ran it (Colab or our own computer): TODO
 - Random seeds, if any: none that affect the statistics. PCA and DESeq2 are deterministic. Random jitter in some dot plots (one plot uses `np.random.default_rng(1)`) only changes how points are drawn.
-- Outputs: the notebook writes figures and tables to `results/` and `results/eda/` (for example `de_EOPE_vs_iPTB.csv` and the volcano plot).
-- Sections 4 to 6 contain the core differential expression analysis. In the decidua version, Section 7 (cell-type markers) cannot run because `interpretation/track01_marker_matrix.csv` is not in the data folder, and Section 6f is slow and is not needed for the final result.
+- Outputs: the notebook writes figures and tables to `results/` and `results/eda/` (for example `de_EOPE_vs_iPTB.csv`, `passing_genes_EOPE_vs_iPTB.csv` and the volcano plot).
+- Data folder: the notebook points to `../data/extension/decidua` (`track01_counts_db.csv`, `track01_metadata_db.csv`, `qc/track01_htseq_summary.csv`). The original placental files (`_vt`) can be used by switching the commented lines in the setup and load cells.
+- Sections 4 to 6 contain the core differential expression analysis. Section 7 (cell-type markers) does not run on the decidua data because `interpretation/track01_marker_matrix.csv` is missing from that folder, and Section 6f is slow and not needed for the final result.
 
 ## Files
 
@@ -48,7 +48,7 @@ Reproducibility details:
 
 ## Key Findings
 
-We compared EOPE (n=8, delivered at 26.0-33.0 weeks) with iPTB (n=5, 29.9-33.0 weeks) using PyDESeq2 with the design `~ fetal_sex + maternal_age_years_class + group` (13 samples, 4 parameters, 9 residual degrees of freedom). Of 19,337 genes tested, 79 passed padj < 0.05 and |log2 fold change| >= 1: 51 were higher and 28 lower in EOPE. A row-wise z-score heatmap of the 20 genes with the smallest padj shows how these genes behave across all clinical groups. TODO: add what the Zeisel/Admati gene browser showed for at least three genes.
+We compared EOPE (n=8, delivered at 26.0-33.0 weeks) with iPTB (n=5, 29.9-33.0 weeks) using PyDESeq2 with the design `~ fetal_sex + maternal_age_years_class + group` (13 samples, 4 parameters, 9 residual degrees of freedom). Of 19,337 genes tested, 79 passed padj < 0.05 and |log2 fold change| >= 1: 51 were higher and 28 lower in EOPE. The genes with the smallest padj were UCA1, NTRK2, ARSI, LEP and COASY. LEP (log2 fold change 6.6), PAPPA2 (1.7) and INHBA (2.0) were all higher in EOPE, and a row-wise z-score heatmap of the top 20 genes shows how they behave across all clinical groups. TODO: add what the Zeisel/Admati gene browser showed for at least three genes.
 
 ## Limitations
 
@@ -64,3 +64,22 @@ We compared EOPE (n=8, delivered at 26.0-33.0 weeks) with iPTB (n=5, 29.9-33.0 w
 ## Presentation
 
 Video link: TODO add your unlisted YouTube link
+
+## Citations
+
+Datasets
+
+1. Ackerman WE, Buhimschi IA, Buhimschi CS, et al. Molecular subphenotyping using placental transcriptomics in early-onset preeclampsia and fetal growth restriction. NCBI GEO GSE203507. https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE203507
+2. Zeisel lab placenta PE gene browser. https://storage.googleapis.com/www_zeisellab/PE_web/pe_web_test_v1.html (add only if used)
+3. Track 1 data package, OpenBio 2026 Datathon, Harvard Undergraduate OpenBio. https://github.com/Harvard-Undergraduate-OpenBio/openbio-datathon-2026/tree/main/track-01/data
+
+Tools
+
+4. Muzellec B, Telenczuk M, Cabeli V, Andreux M. PyDESeq2: a python package for bulk RNA-seq differential expression analysis. Bioinformatics 39(9), btad547 (2023). https://doi.org/10.1093/bioinformatics/btad547
+5. Love MI, Huber W, Anders S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology 15, 550 (2014). https://doi.org/10.1186/s13059-014-0550-8
+6. Anders S, Pyl PT, Huber W. HTSeq: a Python framework to work with high-throughput sequencing data. Bioinformatics 31(2), 166-169 (2015). https://doi.org/10.1093/bioinformatics/btu638 (read-assignment QC summary)
+7. Pedregosa F, et al. Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research 12, 2825-2830 (2011). (PCA)
+8. Harris CR, et al. Array programming with NumPy. Nature 585, 357-362 (2020). https://doi.org/10.1038/s41586-020-2649-2
+9. McKinney W. Data Structures for Statistical Computing in Python. Proceedings of the 9th Python in Science Conference, 56-61 (2010).
+10. Virtanen P, et al. SciPy 1.0: fundamental algorithms for scientific computing in Python. Nature Methods 17, 261-272 (2020). https://doi.org/10.1038/s41592-019-0686-2
+11. Hunter JD. Matplotlib: A 2D graphics environment. Computing in Science & Engineering 9(3), 90-95 (2007). https://doi.org/10.1109/MCSE.2007.55
